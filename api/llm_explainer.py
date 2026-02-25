@@ -4,7 +4,7 @@ import threading
 from openai import OpenAI
 
 
-# ===== Loading Spinner =====
+
 def loading_spinner(stop_event):
     while not stop_event.is_set():
         for c in "|/-\\":
@@ -17,7 +17,7 @@ def loading_spinner(stop_event):
     sys.stdout.flush()
 
 
-# ===== LLM Explanation Function =====
+
 def generate_llm_explanation(url, prediction, confidence):
 
     client = OpenAI(
@@ -49,7 +49,7 @@ Write a SHORT enterprise risk explanation aligned with the prediction.
 
     try:
         response = client.chat.completions.create(
-            # ⭐ CHANGED MODEL — more stable free endpoint
+            
             model="mistralai/mistral-7b-instruct-v0.2",
             messages=[
                 {"role": "system", "content": "You are a professional SOC analyst."},
@@ -61,7 +61,7 @@ Write a SHORT enterprise risk explanation aligned with the prediction.
         stop_event.set()
         spinner_thread.join()
 
-        # ⭐ SAFE RESPONSE HANDLING
+        
         if response and hasattr(response, "choices") and len(response.choices) > 0:
             message = response.choices[0].message
             if message and hasattr(message, "content"):
@@ -75,7 +75,7 @@ Write a SHORT enterprise risk explanation aligned with the prediction.
         spinner_thread.join()
         print("🔥 LLM ERROR:", str(e))
 
-        # ⭐ FALLBACK EXPLANATION (never breaks demo)
+        
         return f"""
 Enterprise Risk Summary:
 Prediction: {prediction.upper()}
