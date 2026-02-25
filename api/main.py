@@ -65,13 +65,7 @@ def analyze_email(request: EmailRequest):
             else:
                 label = "legitimate"
 
-            # ⭐ Risk-level scoring (Phase 1 upgrade)
-            if prob >= 0.75:
-                risk_level = "high"
-            elif prob >= 0.45:
-                risk_level = "medium"
-            else:
-                risk_level = "low"
+            
 
             # ⭐ SECURITY OVERRIDE RULE (brand impersonation)
             domain = urlparse(url).netloc.lower()
@@ -95,6 +89,13 @@ def analyze_email(request: EmailRequest):
             if has_brand(domain) and not is_trusted(domain) and prob >= 0.55:
                     label = "phishing"
                     prob = max(prob, 0.75)
+             # ⭐ Risk-level scoring (Phase 1 upgrade)
+            if prob >= 0.75:
+                risk_level = "high"
+            elif prob >= 0.45:
+                risk_level = "medium"
+            else:
+                risk_level = "low"       
             
             # ⭐ Phase-3: Decision Summary (rule-based reasoning)
             if label == "phishing":
