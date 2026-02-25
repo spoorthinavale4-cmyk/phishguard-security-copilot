@@ -5,7 +5,7 @@ import threading
 from openai import OpenAI
 
 
-# ===== Loading Spinner =====
+
 def loading_spinner(stop_event):
     while not stop_event.is_set():
         for c in "|/-\\":
@@ -18,6 +18,10 @@ def loading_spinner(stop_event):
     sys.stdout.flush()
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 48d22b95b14d3ec83dc6d7eec4edce3d7a2e5ca5
 def generate_llm_explanation(url, prediction, confidence):
 
     client = OpenAI(
@@ -75,7 +79,11 @@ Write a SHORT enterprise risk explanation aligned with the prediction.
         spinner_thread.join()
         print("🔥 LLM ERROR:", str(e))
 
+<<<<<<< HEAD
        
+=======
+        
+>>>>>>> 48d22b95b14d3ec83dc6d7eec4edce3d7a2e5ca5
         return f"""
 Enterprise Risk Summary:
 Prediction: {prediction.upper()}
