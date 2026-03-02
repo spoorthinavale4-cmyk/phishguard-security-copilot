@@ -1,4 +1,8 @@
-
+from fastapi import Request
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+from fastapi.responses import JSONResponse
 from fastapi import FastAPI
 from pydantic import BaseModel
 from urllib.parse import urlparse
@@ -11,6 +15,15 @@ from llm_explainer import generate_llm_explanation
 
 
 app = FastAPI(title="PhishGuard Security Copilot API")
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+
+@app.exception_handler(RateLimitExceeded)
+def rate_limit_handler(request, exc):
+    return JSONResponse(
+        status_code=429,
+        content={"error": "Rate limit exceeded. Try again later."},
+    )
 
 
 class EmailRequest(BaseModel):
@@ -18,9 +31,10 @@ class EmailRequest(BaseModel):
 
 
 @app.post("/analyze-email")
-def analyze_email(request: EmailRequest):
+@limiter.limit("10/minute")
+def analyze_email(request: Request, body: EmailRequest):
 
-    urls = extract_urls(request.email_text)
+    urls = extract_urls(body.email_text)
     results = []
 
     TRUSTED_DOMAINS = ["google.com", "microsoft.com", "paypal.com", "amazon.com"]
