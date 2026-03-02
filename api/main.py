@@ -1,3 +1,4 @@
+
 from fastapi import FastAPI
 from pydantic import BaseModel
 from urllib.parse import urlparse
@@ -8,7 +9,7 @@ from email_parser import extract_urls
 from phishing_inference import predict_phishing
 from llm_explainer import generate_llm_explanation
 
-# ⭐ THIS MUST COME BEFORE ANY ROUTES
+
 app = FastAPI(title="PhishGuard Security Copilot API")
 
 
@@ -43,7 +44,7 @@ def analyze_email(request: EmailRequest):
             domain = urlparse(url).netloc.lower()
             domain = domain.split(":")[0]
 
-# ⭐ Legitimate-domain safeguard
+
             SAFE_TOP_LEVEL_DOMAINS = [
             "github.com",
             "openai.com",
@@ -55,9 +56,9 @@ def analyze_email(request: EmailRequest):
 ]
 
             if any(domain == d or domain.endswith("." + d) for d in SAFE_TOP_LEVEL_DOMAINS):
-                prob = min(prob, 0.40)  # lower risk score
+                prob = min(prob, 0.40)  
 
-            # ⭐ Risk-tier labeling (safer than hard phishing/legit)
+            
             if prob >= 0.70:
                 label = "phishing"
             elif prob >= 0.45:
@@ -67,20 +68,20 @@ def analyze_email(request: EmailRequest):
 
             
 
-            # ⭐ SECURITY OVERRIDE RULE (brand impersonation)
+        
             domain = urlparse(url).netloc.lower()
             domain = domain.split(":")[0]
-            # ⭐ Phase-2: Security Signals
+            
             signals = []
-            # Signal 1️⃣ : Non-secure protocol
+            
             if url.startswith("http://"):
                 signals.append("non_secure_protocol")
 
-            # Signal 2️⃣ : Brand impersonation pattern
+            
             if has_brand(domain) and not is_trusted(domain):
                 signals.append("brand_impersonation") 
 
-            # Signal 3️⃣ : Risky top-level domain
+            
             RISKY_TLDS = [".ru", ".tk", ".xyz", ".top", ".click"]
 
             if any(domain.endswith(tld) for tld in RISKY_TLDS):
@@ -89,7 +90,7 @@ def analyze_email(request: EmailRequest):
             if has_brand(domain) and not is_trusted(domain) and prob >= 0.55:
                     label = "phishing"
                     prob = max(prob, 0.75)
-             # ⭐ Risk-level scoring (Phase 1 upgrade)
+             
             if prob >= 0.75:
                 risk_level = "high"
             elif prob >= 0.45:
@@ -97,7 +98,7 @@ def analyze_email(request: EmailRequest):
             else:
                 risk_level = "low"       
             
-            # ⭐ Phase-3: Decision Summary (rule-based reasoning)
+            
             if label == "phishing":
                 if "brand_impersonation" in signals:
                     decision_summary = "High-risk phishing due to brand impersonation"
@@ -131,12 +132,12 @@ def analyze_email(request: EmailRequest):
                 "risk_level": risk_level,
                 "signals": signals,
                 "decision_summary": decision_summary,
-                "explanation": explanation,
+                "explanation":explanation,
                 "siem_alert": siem_data
             })
 
         except Exception as e:
-            print("🔥 REAL ERROR OCCURRED:", str(e))
+            print("REAL ERROR OCCURRED:", str(e))
             raise
 
     return {
