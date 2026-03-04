@@ -4,7 +4,6 @@ import sys
 import threading
 from openai import OpenAI
 from dotenv import load_dotenv
-import os
 
 load_dotenv()
 API_KEY = os.getenv("Groq_API_KEY")

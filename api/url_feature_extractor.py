@@ -5,14 +5,10 @@ import whois
 from datetime import datetime
 from urllib.parse import urlparse
 
-# =====================================================
-# 🔐 Global Cache (prevents WHOIS from slowing API)
-# =====================================================
+
 WHOIS_CACHE = {}
 
-# =====================================================
-# 🔐 Trusted / Brand lists
-# =====================================================
+
 TRUSTED_DOMAINS = ["google.com", "microsoft.com", "paypal.com", "amazon.com"]
 KNOWN_BRANDS = ["google", "microsoft", "paypal", "amazon", "apple", "facebook"]
 
@@ -36,14 +32,10 @@ def extract_features_from_url(url):
 
     features = {}
 
-    # =====================================================
-    # 1️⃣ Having IP Address
-    # =====================================================
+    
     features["having_IP_Address"] = -1 if re.match(r"^\d{1,3}(\.\d{1,3}){3}$", domain) else 1
 
-    # =====================================================
-    # 2️⃣ URL Length
-    # =====================================================
+    
     if len(url) < 54:
         features["URL_Length"] = 1
     elif 54 <= len(url) <= 75:
@@ -51,42 +43,28 @@ def extract_features_from_url(url):
     else:
         features["URL_Length"] = -1
 
-    # =====================================================
-    # 3️⃣ Shortening Service
-    # =====================================================
+    
     shorteners = ["bit.ly", "tinyurl", "goo.gl", "t.co", "ow.ly", "short.ly", "is.gd", "buff.ly"]
     features["Shortining_Service"] = -1 if any(s in domain for s in shorteners) else 1
 
-    # =====================================================
-    # 4️⃣ @ Symbol
-    # =====================================================
+   
     features["having_At_Symbol"] = -1 if "@" in url else 1
 
-    # =====================================================
-    # 5️⃣ Double slash redirecting
-    # =====================================================
+
     url_after_protocol = url.split("://", 1)[-1]
     features["double_slash_redirecting"] = -1 if "//" in url_after_protocol else 1
 
-    # =====================================================
-    # 6️⃣ Prefix Suffix
-    # =====================================================
+
     features["Prefix_Suffix"] = -1 if "-" in domain else 1
 
-    # =====================================================
-    # 7️⃣ Subdomain count
-    # =====================================================
+    
     subdomain_levels = domain.split(".")
     features["having_Sub_Domain"] = -1 if len(subdomain_levels) >= 4 else 1
 
-    # =====================================================
-    # 8️⃣ HTTPS token
-    # =====================================================
+    
     features["HTTPS_token"] = 1 if url.startswith("https://") else -1
 
-    # =====================================================
-    # 9️⃣ SSL final state
-    # =====================================================
+    
     try:
         ctx = ssl.create_default_context()
         with ctx.wrap_socket(socket.socket(), server_hostname=domain) as s:
@@ -96,9 +74,7 @@ def extract_features_from_url(url):
     except Exception:
         features["SSLfinal_State"] = -1
 
-    # =====================================================
-    # 🔟 WHOIS: age of domain + registration length
-    # =====================================================
+    
     try:
         if domain in WHOIS_CACHE:
             w = WHOIS_CACHE[domain]
@@ -130,25 +106,19 @@ def extract_features_from_url(url):
         features["age_of_domain"] = -1
         features["Domain_registeration_length"] = -1
 
-    # =====================================================
-    # 1️⃣1️⃣ DNS Record
-    # =====================================================
+    
     try:
         socket.gethostbyname(domain)
         features["DNSRecord"] = 1
     except Exception:
         features["DNSRecord"] = -1
 
-    # =====================================================
-    # 1️⃣2️⃣ Port
-    # =====================================================
+    
     port = parsed.port
     STANDARD_PORTS = [80, 443, None]
     features["port"] = -1 if port not in STANDARD_PORTS else 1
 
-    # =====================================================
-    # 1️⃣3️⃣ Brand impersonation detection
-    # =====================================================
+    
     if has_brand(domain) and not is_trusted(domain):
         features["Google_Index"] = -1
     elif is_trusted(domain):
@@ -156,9 +126,7 @@ def extract_features_from_url(url):
     else:
         features["Google_Index"] = 0
 
-    # =====================================================
-    # 1️⃣4️⃣ Reputation signals (neutral if unknown)
-    # =====================================================
+    
     if is_trusted(domain):
         features["web_traffic"] = 1
         features["Page_Rank"] = 1
@@ -166,9 +134,7 @@ def extract_features_from_url(url):
         features["web_traffic"] = 0
         features["Page_Rank"] = 0
 
-    # =====================================================
-    # 🧩 Dataset Feature List
-    # =====================================================
+    
     ALL_FEATURES = [
         "having_IP_Address","URL_Length","Shortining_Service","having_At_Symbol",
         "double_slash_redirecting","Prefix_Suffix","having_Sub_Domain","SSLfinal_State",
@@ -179,14 +145,12 @@ def extract_features_from_url(url):
         "Statistical_report"
     ]
 
-    # =====================================================
-    # 🧱 Fill missing features safely
-    # =====================================================
+    
     for f in ALL_FEATURES:
         if f not in features:
             features[f] = 0
 
-    # Debug print (optional)
+    
     print("FEATURE VECTOR:", features)
 
     return features
