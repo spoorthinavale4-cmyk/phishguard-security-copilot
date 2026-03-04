@@ -1,7 +1,12 @@
 import joblib
 import pandas as pd
 
-MODEL_PATH = "../models/phishing_classifier.pkl"
+import os
+import joblib
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MODEL_PATH = os.path.join(BASE_DIR, "models", "phishing_classifier.pkl")
+
 model = joblib.load(MODEL_PATH)
 
 # ⭐ VERY IMPORTANT — TRAINING FEATURE ORDER
