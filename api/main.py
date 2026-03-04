@@ -7,11 +7,11 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from urllib.parse import urlparse
 
-from url_feature_extractor import extract_features_from_url
-from siem_checker import check_siem_for_clicks
-from email_parser import extract_urls
-from phishing_inference import predict_phishing
-from llm_explainer import generate_llm_explanation
+from api.url_feature_extractor import extract_features_from_url
+from api.siem_checker import check_siem_for_clicks
+from api.email_parser import extract_urls
+from api.phishing_inference import predict_phishing
+from api.llm_explainer import generate_llm_explanation
 
 
 app = FastAPI(title="PhishGuard Security Copilot API")
