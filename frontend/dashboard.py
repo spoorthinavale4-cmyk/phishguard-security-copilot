@@ -1,42 +1,33 @@
 import streamlit as st
 import requests
 
-API_URL = "https://phishguard-security-copilot.onrender.com/analyze-email"
+API_URL = "https://phishguard-security-copilot.onrender.com/analyze"
 
-st.title("PhishGuard Security Copilot")
+st.set_page_config(page_title="PhishGuard Security Copilot")
 
-email_text = st.text_area("Paste suspicious email content")
+st.title("🛡️ PhishGuard Security Copilot")
+st.write("Paste an email below to detect phishing links.")
+
+email_text = st.text_area("Email Content")
 
 if st.button("Analyze Email"):
 
-    if email_text.strip() == "":
-        st.warning("Please paste email content")
+    if not email_text.strip():
+        st.warning("Please paste an email first.")
     else:
         with st.spinner("Analyzing email..."):
 
-            payload = {"email_text": email_text}
+            try:
+                response = requests.post(
+                    API_URL,
+                    json={"text": email_text},
+                    timeout=60
+                )
 
-            response = requests.post(API_URL, json=payload)
+                result = response.json()
 
-            if response.status_code == 200:
+                st.subheader("Analysis Result")
+                st.json(result)
 
-                data = response.json()
-
-                for item in data["analysis"]:
-
-                    st.subheader("URL Analysis")
-
-                    st.write("URL:", item["url"])
-                    st.write("Prediction:", item["prediction"])
-                    st.write("Confidence:", item["confidence"])
-                    st.write("Risk Level:", item["risk_level"])
-
-                    st.write("Signals:", ", ".join(item["signals"]))
-
-                    st.write("Decision:", item["decision_summary"])
-
-                    st.write("Explanation:")
-                    st.write(item["explanation"])
-
-            else:
-                st.error("API request failed")
+            except Exception as e:
+                st.error(f"Error connecting to API: {e}")
