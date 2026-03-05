@@ -1,22 +1,42 @@
 import streamlit as st
 import requests
 
-st.title("🛡️ PhishGuard Security Copilot")
+API_URL = "https://phishguard-security-copilot.onrender.com/analyze-email"
 
-email_text = st.text_area("Paste email content containing URLs:")
+st.title("PhishGuard Security Copilot")
 
-if st.button("Analyze"):
+email_text = st.text_area("Paste suspicious email content")
 
-    payload = {"email_text": email_text}
+if st.button("Analyze Email"):
 
-    try:
-        response = requests.post(
-            "http://127.0.0.1:9000/analyze-email",
-            json=payload
-        )
+    if email_text.strip() == "":
+        st.warning("Please paste email content")
+    else:
+        with st.spinner("Analyzing email..."):
 
-        data = response.json()
-        st.json(data)
+            payload = {"email_text": email_text}
 
-    except Exception as e:
-        st.error(str(e))
+            response = requests.post(API_URL, json=payload)
+
+            if response.status_code == 200:
+
+                data = response.json()
+
+                for item in data["analysis"]:
+
+                    st.subheader("URL Analysis")
+
+                    st.write("URL:", item["url"])
+                    st.write("Prediction:", item["prediction"])
+                    st.write("Confidence:", item["confidence"])
+                    st.write("Risk Level:", item["risk_level"])
+
+                    st.write("Signals:", ", ".join(item["signals"]))
+
+                    st.write("Decision:", item["decision_summary"])
+
+                    st.write("Explanation:")
+                    st.write(item["explanation"])
+
+            else:
+                st.error("API request failed")
