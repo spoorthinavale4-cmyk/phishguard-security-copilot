@@ -4,7 +4,7 @@ import requests
 
 st.write("STREAMLIT APP STARTED")
 
-API_URL = "https://phishguard-security-copilot.onrender.com/docs#/"
+API_URL = "https://phishguard-security-copilot.onrender.com/analyze_email"
 
 st.set_page_config(page_title="PhishGuard Security Copilot")
 
