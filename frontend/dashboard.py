@@ -1,6 +1,9 @@
 import streamlit as st
 import requests
 
+
+st.write("STREAMLIT APP STARTED")
+
 API_URL = "https://phishguard-security-copilot.onrender.com/analyze"
 
 st.set_page_config(page_title="PhishGuard Security Copilot")
