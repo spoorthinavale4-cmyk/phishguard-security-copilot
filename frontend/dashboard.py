@@ -25,9 +25,8 @@ if st.button("Analyze Email"):
                     timeout=60
                 )
 
+                # Debug info
                 st.write("Status Code:", response.status_code)
-
-                # Show raw response first
                 st.write("Raw Response:")
                 st.text(response.text)
 
@@ -36,8 +35,42 @@ if st.button("Analyze Email"):
                     try:
                         result = response.json()
 
-                        st.subheader("Analysis Result")
-                        st.json(result)
+                        st.success("Analysis Complete")
+
+                        if not result.get("analysis"):
+                            st.info("No URLs found in the email.")
+                        else:
+                            for item in result["analysis"]:
+
+                                st.subheader("🔍 URL Analysis")
+
+                                st.write("**URL:**", item["url"])
+                                st.write("**Prediction:**", item["prediction"])
+                                st.write("**Confidence:**", round(item["confidence"], 2))
+                                st.write("**Risk Level:**", item["risk_level"])
+
+                                # Risk indicator
+                                if item["risk_level"] == "high":
+                                    st.error("🔴 HIGH RISK")
+                                elif item["risk_level"] == "medium":
+                                    st.warning("🟡 MEDIUM RISK")
+                                else:
+                                    st.success("🟢 SAFE")
+
+                                st.write("**Signals:**", ", ".join(item["signals"]))
+
+                                st.write("**Decision Summary:**")
+                                st.info(item["decision_summary"])
+
+                                st.write("**AI Explanation:**")
+                                st.write(item["explanation"])
+
+                                # SIEM alert section
+                                if item.get("siem_alert"):
+                                    st.subheader("⚠️ SIEM Alert")
+                                    st.write(item["siem_alert"])
+
+                                st.divider()
 
                     except Exception:
                         st.error("Response was not valid JSON.")
