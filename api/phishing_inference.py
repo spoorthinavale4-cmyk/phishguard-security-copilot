@@ -1,15 +1,14 @@
-import joblib
-import pandas as pd
-
 import os
 import joblib
+import pandas as pd
+from urllib.parse import urlparse
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL_PATH = os.path.join(BASE_DIR, "models", "phishing_classifier.pkl")
 
 model = joblib.load(MODEL_PATH)
 
-# ⭐ VERY IMPORTANT — TRAINING FEATURE ORDER
+# Training feature order
 FEATURE_ORDER = [
     "having_IP_Address","URL_Length","Shortining_Service","having_At_Symbol",
     "double_slash_redirecting","Prefix_Suffix","having_Sub_Domain","SSLfinal_State",
@@ -20,25 +19,68 @@ FEATURE_ORDER = [
     "Statistical_report"
 ]
 
-THRESHOLD = 0.60  # ⭐ security decision threshold
+THRESHOLD = 0.60
 
 
-def predict_phishing(features_dict):
+# Security intelligence lists
+TRUSTED_DOMAINS = [
+    "google.com","amazon.com","amazon.in","paypal.com",
+    "microsoft.com","apple.com","icicibank.com"
+]
 
-    # ⭐ Force correct column order
+KNOWN_BRANDS = [
+    "google","amazon","paypal","microsoft","apple","facebook","netflix"
+]
+
+SUSPICIOUS_TLDS = [
+    ".xyz",".top",".ru",".tk",".gq",".ml",".click",".link"
+]
+
+
+def is_trusted(domain):
+    return any(domain == d or domain.endswith("." + d) for d in TRUSTED_DOMAINS)
+
+
+def predict_phishing(url, features_dict):
+
+    parsed = urlparse(url)
+    domain = parsed.netloc.lower()
+
+    signals = []
+
+    # 1️⃣ Trusted domain override
+    if is_trusted(domain):
+        return {
+            "prediction": "legitimate",
+            "confidence": 0.95,
+            "risk_level": "low",
+            "signals": ["trusted_domain"]
+        }
+
+    # 2️⃣ Brand impersonation detection
+    if any(brand in domain for brand in KNOWN_BRANDS) and not is_trusted(domain):
+        signals.append("brand_impersonation")
+
+    # 3️⃣ Suspicious TLD detection
+    if any(domain.endswith(tld) for tld in SUSPICIOUS_TLDS):
+        signals.append("risky_tld")
+
+    # Ensure feature order matches training
     ordered_features = {k: features_dict[k] for k in FEATURE_ORDER}
 
     df = pd.DataFrame([ordered_features])
 
-    # Get phishing probability
-    # NOTE: assuming phishing class is -1 or 1 depending on training,
-    # but we use probability instead of model.predict()
     probs = model.predict_proba(df)[0]
 
-    # Usually phishing is class index 1 — if unsure, this still works
-    probability = max(probs)
+    phishing_prob = max(probs)
 
-    # ⭐ Apply custom threshold instead of model.predict()
-    prediction = -1 if probability >= THRESHOLD else 1
+    prediction = "phishing" if phishing_prob >= THRESHOLD else "legitimate"
 
-    return prediction, probability
+    risk = "high" if phishing_prob > 0.75 else "medium" if phishing_prob > 0.60 else "low"
+
+    return {
+        "prediction": prediction,
+        "confidence": float(phishing_prob),
+        "risk_level": risk,
+        "signals": signals
+    }
