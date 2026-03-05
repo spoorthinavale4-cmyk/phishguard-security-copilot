@@ -8,7 +8,7 @@ API_URL = "https://phishguard-security-copilot.onrender.com/analyze-email"
 
 st.set_page_config(page_title="PhishGuard Security Copilot")
 
-st.title("🛡️ PhishGuard Security Copilot")
+st.title(" PhishGuard Security Copilot")
 st.write("Paste an email below to detect phishing links.")
 
 email_text = st.text_area("Email Content")
@@ -23,7 +23,7 @@ if st.button("Analyze Email"):
             try:
                 response = requests.post(
                     API_URL,
-                    json={"text": email_text},
+                    json={"email_text": email_text},
                     timeout=60
                 )
 
