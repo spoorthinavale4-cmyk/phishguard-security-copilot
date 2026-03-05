@@ -3,12 +3,10 @@ import requests
 
 st.set_page_config(page_title="PhishGuard Security Copilot")
 
-st.write("STREAMLIT APP STARTED")
-
-API_URL = "https://phishguard-security-copilot.onrender.com/analyze-email"
-
 st.title("🛡️ PhishGuard Security Copilot")
 st.write("Paste an email below to detect phishing links.")
+
+API_URL = "https://phishguard-security-copilot.onrender.com/analyze-email"
 
 email_text = st.text_area("Email Content")
 
@@ -28,16 +26,24 @@ if st.button("Analyze Email"):
                 )
 
                 st.write("Status Code:", response.status_code)
-                st.write("Raw Response:", response.text)
+
+                # Show raw response first
+                st.write("Raw Response:")
+                st.text(response.text)
 
                 if response.status_code == 200:
-                    result = response.json()
 
-                    st.subheader("Analysis Result")
-                    st.json(result)
+                    try:
+                        result = response.json()
+
+                        st.subheader("Analysis Result")
+                        st.json(result)
+
+                    except Exception:
+                        st.error("Response was not valid JSON.")
 
                 else:
                     st.error("API returned an error")
 
             except Exception as e:
-                st.error(f"Error connecting to API: {e}")
+                st.error(f"Connection error: {e}")
