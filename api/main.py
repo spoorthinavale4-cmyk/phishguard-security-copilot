@@ -10,6 +10,7 @@ from api.url_feature_extractor import extract_features_from_url
 from api.siem_checker import check_siem_for_clicks
 from api.email_parser import extract_urls
 from api.phishing_inference import predict_phishing
+from api.safe_browsing import check_url_safe_browsing, threat_type_to_label
 from api.llm_explainer import generate_llm_explanation
 
 
@@ -54,7 +55,17 @@ def analyze_email(request: Request, body: EmailRequest):
             risk_level = result["risk_level"]
             signals = result["signals"]
 
-            print("DEBUG MODEL OUTPUT:", label, prob)
+            # ── Google Safe Browsing hard override ──────────────────────────
+            sb = check_url_safe_browsing(url)
+            if sb["available"] and sb["is_threat"]:
+                # Google has confirmed this URL is malicious — trust it fully
+                threat_signal = threat_type_to_label(sb["threat_type"])
+                label = "phishing"
+                prob = 0.99
+                risk_level = "high"
+                if threat_signal not in signals:
+                    signals = [threat_signal] + signals
+            # ────────────────────────────────────────────────────────────────
 
             domain = urlparse(url).netloc.lower().split(":")[0]
 
