@@ -77,10 +77,13 @@ def analyze_email(request: Request, body: EmailRequest):
 
             safe_tld_match = any(domain.endswith(t) for t in SAFE_TLDS)
 
-            # Only cap phishing confidence — never overwrite a legitimate verdict's confidence
+            # Only cap phishing confidence — never overwrite a legitimate verdict
             if label == "phishing":
                 if any(domain == d or domain.endswith("." + d) for d in SAFE_TOP_LEVEL_DOMAINS) or safe_tld_match:
                     prob = min(prob, 0.40)
+                    # Recalculate label and risk consistently with the new capped probability
+                    label = "phishing" if prob >= 0.60 else "legitimate"
+                    risk_level = "high" if prob > 0.75 else "medium" if prob > 0.60 else "low"
 
             # Decision summary
             if label == "phishing":
@@ -97,8 +100,10 @@ def analyze_email(request: Request, body: EmailRequest):
             else:
                 decision_summary = "No strong phishing indicators"
 
-            explanation = generate_llm_explanation(url, label, prob)
-            print("DEBUG LLM DONE")
+            # LLM explanation temporarily disabled to preserve API quota.
+            # Re-enable by uncommenting the line below and removing the placeholder.
+            # explanation = generate_llm_explanation(url, label, prob)
+            explanation = "AI explanation is temporarily disabled."
 
             siem_data = {}
 

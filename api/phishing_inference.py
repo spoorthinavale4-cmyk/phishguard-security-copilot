@@ -22,10 +22,32 @@ FEATURE_ORDER = [
 THRESHOLD = 0.60
 
 
-# Security intelligence lists
+# Hard-coded trusted domains — ML model is SKIPPED for these entirely
 TRUSTED_DOMAINS = [
-    "google.com","amazon.com","amazon.in","paypal.com",
-    "microsoft.com","apple.com","icicibank.com"
+    # Major tech
+    "google.com", "youtube.com", "gmail.com", "googlemail.com",
+    "microsoft.com", "microsoftonline.com", "office.com", "live.com", "outlook.com",
+    "apple.com", "icloud.com",
+    "amazon.com", "amazon.in", "aws.amazon.com",
+    "github.com", "githubusercontent.com",
+    "openai.com", "chatgpt.com",
+    # Social / communication
+    "facebook.com", "instagram.com", "whatsapp.com",
+    "twitter.com", "x.com",
+    "linkedin.com",
+    "reddit.com",
+    "tiktok.com",
+    # Finance
+    "paypal.com", "stripe.com",
+    "icicibank.com", "hdfcbank.com", "sbi.co.in",
+    # Developer / knowledge
+    "stackoverflow.com", "stackexchange.com",
+    "wikipedia.org", "wikimedia.org",
+    "npmjs.com", "pypi.org",
+    "cloudflare.com",
+    "netlify.com", "vercel.com",
+    # Indian trusted
+    "flipkart.com", "myntra.com", "swiggy.com", "zomato.com",
 ]
 
 KNOWN_BRANDS = [
