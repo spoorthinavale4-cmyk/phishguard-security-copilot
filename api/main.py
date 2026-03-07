@@ -77,8 +77,10 @@ def analyze_email(request: Request, body: EmailRequest):
 
             safe_tld_match = any(domain.endswith(t) for t in SAFE_TLDS)
 
-            if any(domain == d or domain.endswith("." + d) for d in SAFE_TOP_LEVEL_DOMAINS) or safe_tld_match:
-                prob = min(prob, 0.40)
+            # Only cap phishing confidence — never overwrite a legitimate verdict's confidence
+            if label == "phishing":
+                if any(domain == d or domain.endswith("." + d) for d in SAFE_TOP_LEVEL_DOMAINS) or safe_tld_match:
+                    prob = min(prob, 0.40)
 
             # Decision summary
             if label == "phishing":
