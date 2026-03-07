@@ -25,10 +25,6 @@ if st.button("Analyze Email"):
                     timeout=60
                 )
 
-                # Debug info
-                st.write("Status Code:", response.status_code)
-                st.write("Raw Response:")
-                st.text(response.text)
 
                 if response.status_code == 200:
 
