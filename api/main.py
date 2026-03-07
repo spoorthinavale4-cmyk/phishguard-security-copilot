@@ -38,15 +38,6 @@ def analyze_email(request: Request, body: EmailRequest):
     urls = extract_urls(body.email_text)
     results = []
 
-    TRUSTED_DOMAINS = ["google.com", "microsoft.com", "paypal.com", "amazon.com"]
-    KNOWN_BRANDS = ["google", "microsoft", "paypal", "amazon", "apple", "facebook"]
-
-    def is_trusted(domain):
-        return any(domain == td or domain.endswith("." + td) for td in TRUSTED_DOMAINS)
-
-    def has_brand(domain):
-        return any(b in domain for b in KNOWN_BRANDS)
-
     for url in urls:
 
         try:
@@ -74,10 +65,19 @@ def analyze_email(request: Request, body: EmailRequest):
                 "microsoft.com",
                 "microsoftonline.com",
                 "amazon.com",
-                "paypal.com"
+                "paypal.com",
+                "stackoverflow.com",
+                "wikipedia.org",
             ]
 
-            if any(domain == d or domain.endswith("." + d) for d in SAFE_TOP_LEVEL_DOMAINS):
+            SAFE_TLDS = [
+                ".ac.in", ".edu.in", ".gov.in", ".nic.in", ".res.in",
+                ".edu", ".gov", ".mil", ".ac.uk", ".gov.uk",
+            ]
+
+            safe_tld_match = any(domain.endswith(t) for t in SAFE_TLDS)
+
+            if any(domain == d or domain.endswith("." + d) for d in SAFE_TOP_LEVEL_DOMAINS) or safe_tld_match:
                 prob = min(prob, 0.40)
 
             # Decision summary

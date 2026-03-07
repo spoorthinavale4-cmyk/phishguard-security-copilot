@@ -36,9 +36,19 @@ SUSPICIOUS_TLDS = [
     ".xyz",".top",".ru",".tk",".gq",".ml",".click",".link"
 ]
 
+# Domains on these TLDs are almost always legitimate institutions
+SAFE_TLDS = [
+    ".ac.in", ".edu.in", ".gov.in", ".nic.in", ".res.in",
+    ".edu", ".gov", ".mil", ".ac.uk", ".gov.uk"
+]
+
 
 def is_trusted(domain):
     return any(domain == d or domain.endswith("." + d) for d in TRUSTED_DOMAINS)
+
+
+def is_safe_tld(domain):
+    return any(domain.endswith(tld) for tld in SAFE_TLDS)
 
 
 def predict_phishing(url, features_dict):
@@ -57,13 +67,26 @@ def predict_phishing(url, features_dict):
             "signals": ["trusted_domain"]
         }
 
-    # 2️⃣ Brand impersonation detection
+    # 2️⃣ Safe TLD override (educational, government domains)
+    if is_safe_tld(domain):
+        return {
+            "prediction": "legitimate",
+            "confidence": 0.85,
+            "risk_level": "low",
+            "signals": ["safe_institutional_tld"]
+        }
+
+    # 3️⃣ Brand impersonation detection
     if any(brand in domain for brand in KNOWN_BRANDS) and not is_trusted(domain):
         signals.append("brand_impersonation")
 
-    # 3️⃣ Suspicious TLD detection
+    # 4️⃣ Suspicious TLD detection
     if any(domain.endswith(tld) for tld in SUSPICIOUS_TLDS):
         signals.append("risky_tld")
+
+    # 5️⃣ Non-secure protocol signal
+    if parsed.scheme == "http":
+        signals.append("non_secure_protocol")
 
     # Ensure feature order matches training
     ordered_features = {k: features_dict[k] for k in FEATURE_ORDER}
@@ -72,7 +95,8 @@ def predict_phishing(url, features_dict):
 
     probs = model.predict_proba(df)[0]
 
-    phishing_prob = max(probs)
+    # model.classes_ == [-1, 1]  →  index 1 is the phishing class
+    phishing_prob = probs[1]
 
     prediction = "phishing" if phishing_prob >= THRESHOLD else "legitimate"
 
