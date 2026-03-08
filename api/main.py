@@ -16,6 +16,11 @@ from api.llm_explainer import generate_llm_explanation
 
 app = FastAPI(title="PhishGuard Security Copilot API")
 
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
+
 limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
 
