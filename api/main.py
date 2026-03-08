@@ -116,10 +116,8 @@ def analyze_email(request: Request, body: EmailRequest):
             else:
                 decision_summary = "No strong phishing indicators"
 
-            # LLM explanation temporarily disabled to preserve API quota.
-            # Re-enable by uncommenting the line below and removing the placeholder.
-            # explanation = generate_llm_explanation(url, label, prob)
-            explanation = "AI explanation is temporarily disabled."
+            # LLM explanation (re-enabled)
+            explanation = generate_llm_explanation(url, label, prob)
 
             siem_data = {}
 
