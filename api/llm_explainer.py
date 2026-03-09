@@ -46,10 +46,6 @@ Write a SHORT enterprise risk explanation aligned with the prediction.
             timeout=15
         )
 
-        stop_event.set()
-        spinner_thread.join()
-
-        
         if response and hasattr(response, "choices") and len(response.choices) > 0:
             message = response.choices[0].message
             if message and hasattr(message, "content"):
