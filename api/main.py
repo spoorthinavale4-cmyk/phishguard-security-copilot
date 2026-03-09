@@ -22,6 +22,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "http://localhost:5173",
+        "https://phishguard-security-copilot-f4n5.vercel.app",
         # Add your Vercel URL here after deploying, e.g.:
         # "https://phishguard.vercel.app",
     ],
