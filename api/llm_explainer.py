@@ -1,24 +1,8 @@
 import os
-import time
-import sys
-import threading
 from openai import OpenAI
 from dotenv import load_dotenv
 
 load_dotenv()
-
-
-
-def loading_spinner(stop_event):
-    while not stop_event.is_set():
-        for c in "|/-\\":
-            sys.stdout.write(f"\r Analyzing... {c}")
-            sys.stdout.flush()
-            time.sleep(0.1)
-            if stop_event.is_set():
-                break
-    sys.stdout.write("\r Analysis complete!     \n")
-    sys.stdout.flush()
 
 
 
@@ -32,7 +16,6 @@ def generate_llm_explanation(url, prediction, confidence):
         base_url="https://api.groq.com/openai/v1",
         api_key=API_KEY
     )
-    
 
     prompt = f"""
 You are a SOC analyst assistant.
@@ -51,14 +34,10 @@ Confidence: {round(confidence*100,2)}%
 Write a SHORT enterprise risk explanation aligned with the prediction.
 """
 
-    stop_event = threading.Event()
-    spinner_thread = threading.Thread(target=loading_spinner, args=(stop_event,))
-    spinner_thread.start()
-
     try:
         response = client.chat.completions.create(
-            
             model="moonshotai/kimi-k2-instruct-0905",
+
             messages=[
                 {"role": "system", "content": "You are a professional SOC analyst."},
                 {"role": "user", "content": prompt}
@@ -76,17 +55,12 @@ Write a SHORT enterprise risk explanation aligned with the prediction.
             if message and hasattr(message, "content"):
                 return message.content
 
-        print("OpenRouter returned unexpected response:", response)
+        print("LLM returned unexpected response:", response)
         return f"Automated risk assessment: {prediction.upper()} risk with {round(confidence*100)}% confidence."
 
     except Exception as e:
-        stop_event.set()
-        spinner_thread.join()
         print("LLM ERROR:", str(e))
-
-
-        return f"""
-Enterprise Risk Summary:
+        return f"""Enterprise Risk Summary:
 Prediction: {prediction.upper()}
 Confidence: {round(confidence*100)}%
 

@@ -1,6 +1,9 @@
+import os
 import pandas as pd
 
-LOG_PATH = "../data/simulated_click_logs.csv"
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LOG_PATH = os.path.join(BASE_DIR, "data", "simulated_click_logs.csv")
+
 
 def check_siem_for_clicks(url):
 

@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import ResultCard from './components/ResultCard.jsx'
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://phishguard-security-copilot.onrender.com'
+const API_URL = import.meta.env.VITE_API_URL
+if (!API_URL) console.error('VITE_API_URL is not set! Set it in your Vercel environment variables.')
+
 
 export default function App() {
   const [emailText, setEmailText] = useState('')
