@@ -32,7 +32,7 @@ Built as a solo student project from scratch: data collection, model training, A
 |---|---|
 | API Framework | FastAPI (Python) |
 | ML Model | Random Forest Classifier (scikit-learn) |
-| ML Features | 30 URL structural features (UCI Phishing Dataset) |
+| ML Features | 30 URL structural features (Phishing Dataset url sourced from kaggle) |
 | LLM Explanation | Groq API (`moonshotai/kimi-k2-instruct-0905`) |
 | Threat Intel | Google Safe Browsing API v4 |
 | SIEM Simulation | CSV-based click log lookup |
@@ -110,7 +110,7 @@ curl -X POST https://phishguard-security-copilot-production.up.railway.app/analy
 
 ##  Training the ML Model
 
-The classifier was trained on the [UCI Machine Learning Phishing Websites Dataset](https://archive.ics.uci.edu/ml/datasets/Phishing+Websites) using 30 URL structural features.
+The classifier was trained on a phishing URL dataset sourced from Kaggle, using 30 engineered structural URL features such as URL length, subdomain depth, special characters, SSL presence, and domain-based signals.
 
 ```bash
 cd training
