@@ -6,10 +6,6 @@ from openai import OpenAI
 from dotenv import load_dotenv
 
 load_dotenv()
-API_KEY = os.getenv("Groq_API_KEY")
-
-if not API_KEY:
-    raise RuntimeError("Groq_API_KEY not found. Check your .env file.")
 
 
 
@@ -27,12 +23,15 @@ def loading_spinner(stop_event):
 
 
 def generate_llm_explanation(url, prediction, confidence):
+    API_KEY = os.getenv("Groq_API_KEY")
+    if not API_KEY:
+        print("WARNING: Groq_API_KEY not set — LLM explanation skipped.")
+        return f"Enterprise Risk Summary:\nPrediction: {prediction.upper()}\nConfidence: {round(confidence*100)}%\n\nAI explanation unavailable (API key not configured)."
 
     client = OpenAI(
-    base_url="https://api.groq.com/openai/v1",
-    api_key=API_KEY
-    
-)
+        base_url="https://api.groq.com/openai/v1",
+        api_key=API_KEY
+    )
     
 
     prompt = f"""
