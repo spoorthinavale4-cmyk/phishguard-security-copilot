@@ -234,7 +234,7 @@ npm run dev
 
 ## 👩‍💻 About
 
-Built by **Spoorthi Navale** as a student project exploring the intersection of machine learning and cybersecurity.
+Built by **Spoorthi AG** as a student project exploring the intersection of machine learning and cybersecurity.
 
 > *Full disclosure: every API key used in this project is running on a free tier.*  
 > *The Groq LLM key has seen things. Dark things. Hundreds of phishing URLs at 2am.*  
