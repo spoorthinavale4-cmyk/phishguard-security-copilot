@@ -60,11 +60,6 @@ Built as a solo student project from scratch: data collection, model training, A
 - **CORS-protected** — only the deployed Vercel frontend and localhost are allowed
 - **Responsive UI** — works on mobile and desktop
 
----
-
-## 📁 Project Structure
-
-![Project structure](project_structure.png)
 
 
 
