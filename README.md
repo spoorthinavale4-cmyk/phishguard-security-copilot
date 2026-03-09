@@ -111,20 +111,8 @@ phishguard-llm/
 ## 🏗️ Architecture
 
 ```
-┌─────────────────────┐         ┌──────────────────────────┐
-│   Vercel (Frontend) │ ──────▶ │   Railway (Backend API)  │
-│   React + Vite      │  HTTPS  │   FastAPI + uvicorn       │
-│   phishguard-*.     │         │   phishguard-*.railway.   │
-│   vercel.app        │         │   app                    │
-└─────────────────────┘         └──────────┬───────────────┘
-                                            │
-                         ┌──────────────────┼──────────────────┐
-                         ▼                  ▼                  ▼
-               ┌──────────────┐  ┌──────────────────┐  ┌────────────┐
-               │  scikit-learn│  │  Groq API (LLM)  │  │  Google    │
-               │  RF Model    │  │  SOC Explanation  │  │  Safe      │
-               └──────────────┘  └──────────────────┘  │  Browsing  │
-                                                        └────────────┘
+<img width="1311" height="603" alt="image" src="https://github.com/user-attachments/assets/b28ce0f3-01c5-4428-947a-c697db5ed337" />
+
 ```
 
 ---
