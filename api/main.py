@@ -1,4 +1,5 @@
 from fastapi import Request, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
@@ -15,6 +16,19 @@ from api.llm_explainer import generate_llm_explanation
 
 
 app = FastAPI(title="PhishGuard Security Copilot API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:5173",
+        # Add your Vercel URL here after deploying, e.g.:
+        # "https://phishguard.vercel.app",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/health")
