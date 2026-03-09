@@ -110,6 +110,29 @@ def predict_phishing(url, features_dict):
     if parsed.scheme == "http":
         signals.append("non_secure_protocol")
 
+    # ── Signal-based hard overrides ────────────────────────────────────────
+    # ML model only sees structural features, not brand name text.
+    # These signals are reliable enough to override the model directly.
+
+    # 6️⃣ Brand impersonation → always phishing
+    if "brand_impersonation" in signals:
+        return {
+            "prediction": "phishing",
+            "confidence": 0.92,
+            "risk_level": "high",
+            "signals": signals
+        }
+
+    # 7️⃣ Risky TLD → always phishing
+    if "risky_tld" in signals:
+        return {
+            "prediction": "phishing",
+            "confidence": 0.85,
+            "risk_level": "high",
+            "signals": signals
+        }
+    # ────────────────────────────────────────────────────────────────────────
+
     # Ensure feature order matches training
     ordered_features = {k: features_dict[k] for k in FEATURE_ORDER}
 
