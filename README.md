@@ -1,4 +1,4 @@
-# 🛡️ PhishGuard Security Copilot
+#  PhishGuard Security Copilot
 
 > **AI-powered phishing detection for enterprise email security.**  
 > Built with FastAPI · scikit-learn · Google Safe Browsing · Groq LLM · React + Vite
@@ -16,7 +16,7 @@ Built as a solo student project from scratch: data collection, model training, A
 
 ---
 
-## 🧠 Detection Pipeline (Multi-Layer)
+##  Detection Pipeline (Multi-Layer)
 
 
 ![Detection pipeline](detection_pipeline.png)
@@ -49,7 +49,7 @@ Built as a solo student project from scratch: data collection, model training, A
 
 ---
 
-## 🔍 Features
+##  Features
 
 - **Multi-layer phishing detection** — trusted allowlists, brand impersonation detection, risky TLD checks, ML model, and Google Safe Browsing hard override
 - **30-feature URL analysis** — IP detection, SSL check, WHOIS domain age, subdomain depth, shortener detection, and more
@@ -65,7 +65,7 @@ Built as a solo student project from scratch: data collection, model training, A
 
 ---
 
-## 🏗️ Architecture
+##  Architecture
 
 
 ![Architecture](architecture.png)
@@ -74,7 +74,7 @@ Built as a solo student project from scratch: data collection, model training, A
 
 ---
 
-## 🚦 API Endpoints
+##  API Endpoints
 
 | Method | Endpoint | Description |
 |---|---|---|
@@ -108,7 +108,7 @@ curl -X POST https://phishguard-security-copilot-production.up.railway.app/analy
 
 ---
 
-## 🧪 Training the ML Model
+##  Training the ML Model
 
 The classifier was trained on the [UCI Machine Learning Phishing Websites Dataset](https://archive.ics.uci.edu/ml/datasets/Phishing+Websites) using 30 URL structural features.
 
@@ -121,7 +121,7 @@ Model: **Random Forest Classifier** — saved to `models/phishing_classifier.pkl
 
 ---
 
-## 🔐 Environment Variables
+##  Environment Variables
 
 ### Backend (Railway)
 | Variable | Description |
@@ -134,11 +134,11 @@ Model: **Random Forest Classifier** — saved to `models/phishing_classifier.pkl
 |---|---|
 | `VITE_API_URL` | Railway backend URL (no trailing slash) |
 
-> ⚠️ **Note:** Vite injects env vars at **build time**. If you update `VITE_API_URL` on Vercel, you must trigger a fresh redeploy (no cache) for it to take effect.
+> ⚠️**Note:** Vite injects env vars at **build time**. If you update `VITE_API_URL` on Vercel, you must trigger a fresh redeploy (no cache) for it to take effect.
 
 ---
 
-## 🌐 Deployment
+##  Deployment
 
 | Service | Platform | URL |
 |---|---|---|
@@ -168,7 +168,7 @@ npm run dev
 
 ---
 
-## 💡 Known Limitations
+##  Known Limitations
 
 - WHOIS lookups on some domains are slow (~2–3s) — acceptable for security tooling
 - LLM explanation adds ~1–2s latency per URL (Groq free tier)
@@ -177,7 +177,7 @@ npm run dev
 
 ---
 
-## 👩‍💻 About
+##  About
 
 Built by **Spoorthi AG** as a student project exploring the intersection of machine learning and cybersecurity.
 
