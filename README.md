@@ -19,21 +19,8 @@ Built as a solo student project from scratch: data collection, model training, A
 ## 🧠 Detection Pipeline (Multi-Layer)
 
 ```
-Email Text
-    ↓
-URL Extraction (regex)
-    ↓
-┌─────────────────────────────────────────────┐
-│  Layer 1: Trusted Domain Allowlist           │  → Immediate SAFE verdict
-│  Layer 2: Brand Impersonation Detection      │  → Immediate HIGH RISK verdict
-│  Layer 3: Risky TLD Detection (.xyz .tk …)  │  → Immediate HIGH RISK verdict
-│  Layer 4: ML Classifier (scikit-learn RF)   │  → Probability-based verdict
-│  Layer 5: Google Safe Browsing API Override  │  → Hard phishing override if confirmed
-└─────────────────────────────────────────────┘
-    ↓
-Groq LLM (SOC Analyst Explanation)
-    ↓
-JSON Response → React Frontend
+![Detection pipeline](detection_pipeline.png)
+
 ```
 
 ---
@@ -78,32 +65,8 @@ JSON Response → React Frontend
 ## 📁 Project Structure
 
 ```
-phishguard-llm/
-├── api/
-│   ├── main.py                  # FastAPI app, CORS, routes, rate limiting
-│   ├── phishing_inference.py    # ML model + signal-based overrides
-│   ├── url_feature_extractor.py # 30-feature URL analysis
-│   ├── llm_explainer.py         # Groq LLM SOC explanation
-│   ├── safe_browsing.py         # Google Safe Browsing API
-│   ├── email_parser.py          # URL regex extractor
-│   └── siem_checker.py          # Simulated SIEM click log lookup
-├── client/                      # React + Vite frontend
-│   ├── src/
-│   │   ├── App.jsx
-│   │   ├── index.css
-│   │   └── components/
-│   │       └── ResultCard.jsx
-│   ├── vercel.json
-│   └── vite.config.js
-├── models/
-│   └── phishing_classifier.pkl  # Trained Random Forest model (~22MB)
-├── data/
-│   └── simulated_click_logs.csv
-├── training/
-│   └── train_classifier.py
-├── railway.toml                 # Railway deployment config
-├── requirements.txt
-└── Procfile
+![Project structure](project_structure.png)
+
 ```
 
 ---
@@ -111,7 +74,7 @@ phishguard-llm/
 ## 🏗️ Architecture
 
 ```
-<img width="1311" height="603" alt="image" src="https://github.com/user-attachments/assets/b28ce0f3-01c5-4428-947a-c697db5ed337" />
+![Architecture](architecture.png)
 
 ```
 
