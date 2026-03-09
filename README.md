@@ -18,10 +18,10 @@ Built as a solo student project from scratch: data collection, model training, A
 
 ## 🧠 Detection Pipeline (Multi-Layer)
 
-```
+
 ![Detection pipeline](detection_pipeline.png)
 
-```
+
 
 ---
 
@@ -64,19 +64,18 @@ Built as a solo student project from scratch: data collection, model training, A
 
 ## 📁 Project Structure
 
-```
 ![Project structure](project_structure.png)
 
-```
+
 
 ---
 
 ## 🏗️ Architecture
 
-```
+
 ![Architecture](architecture.png)
 
-```
+
 
 ---
 
