@@ -120,6 +120,19 @@ python train_classifier.py
 Model: **Random Forest Classifier** — saved to `models/phishing_classifier.pkl`
 
 ---
+## Model Performance
+
+Evaluated on a held-out test set (2,211 samples) from the UCI Phishing Websites Dataset:
+
+| Class       | Precision | Recall | F1 Score |
+|-------------|-----------|--------|----------|
+| Legitimate  | 0.98      | 0.97   | 0.97     |
+| Phishing    | 0.97      | 0.98   | 0.98     |
+| **Overall** | **0.98**  | **0.98**| **0.98**|
+
+> High recall on phishing class (0.98) means the model misses very few actual 
+> phishing URLs — critical for a security tool where false negatives are costly.
+---
 
 ##  Environment Variables
 
