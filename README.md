@@ -122,7 +122,7 @@ Model: **Random Forest Classifier** — saved to `models/phishing_classifier.pkl
 ---
 ## Model Performance
 
-Evaluated on a held-out test set (2,211 samples) from the UCI Phishing Websites Dataset:
+Evaluated on a held-out test set (2,211 samples) from the Kaggle phishing url Dataset:
 
 | Class       | Precision | Recall | F1 Score |
 |-------------|-----------|--------|----------|
